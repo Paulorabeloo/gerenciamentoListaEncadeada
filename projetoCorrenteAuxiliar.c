@@ -70,7 +70,7 @@ void Consulta()
         while(auxiliar != NULL)
         {
             k++;
-            if(strcmp(xnome,auxiliar->nome)==0){
+            if(strcmp(xnome,corrente->nome)==0){
                 printf("\nRegistro encontrado na posicao %d", k);
                 system("pause");
                 achou = 1;
@@ -95,43 +95,40 @@ void Excluir()
     {
         printf("\n Lista vazia...");
         system("pause");
-        return;
-    }
-    printf("\nInforme o nome a ser excluido:");
-    scanf("%s", xnome);
-    auxiliar = inicio;
-    corrente = NULL;
-
-    // verifica se o primeiro nó é o que deve ser excluído
-    if (strcmp(xnome, auxiliar->nome) == 0)
-    {
-        inicio = auxiliar->next;  // atualiza o ponteiro para o próximo nó
-        free(auxiliar);  // libera a memória do nó removido
-        printf("\nRegistro excluido com sucesso!");
-        system("pause");
-        return;
-    }
-
-    // percorre a lista
-    while (auxiliar != NULL)
+    } else {
+        auxiliar = inicio;
+        achou = 0;
+        printf("Informe o nome a ser exlcuido");
+        scanf("%s", &xnome);
+        if(strcmp(xnome,auxiliar -> nome)==0)
         {
-        if (strcmp(xnome, auxiliar->nome) == 0)
-        {
-            // nó encontrado; ajusta os ponteiros
-            achou = 1;
-            corrente->next = auxiliar->next;
+            inicio = inicio -> next;
             free(auxiliar);
-            printf("\nRegistro excluido com sucesso!");
+            achou = 1;
+            printf("\n Removido com sucesso o registro <<inicio da lista>>");
             system("pause");
-            return;
+        } else {
+            corrente = auxiliar -> next;
+            while( corrente != NULL)
+            {
+                if(strcmp(xnome,auxiliar -> nome)==0)
+                {
+                    auxiliar -> next = corrente -> next;
+                    free(corrente);
+                    printf("\n Removido com sucesso o registro da lista <<meio & fim>>");
+                    achou=1;
+                    system("pause");
+                    break;
+                } else {
+                    auxiliar = auxiliar -> next;
+                    corrente = corrente -> next;
+                }
+            }
         }
-        // atualiza os ponteiros para continuar a busca
-        corrente = auxiliar;
-        auxiliar = auxiliar->next;
     }
-
-    if (achou == 0) {
-        printf("\nRegistro nao encontrado");
+    if(achou == 0)
+    {
+        printf("\n Registro não encontrado na Lista");
         system("pause");
     }
 }

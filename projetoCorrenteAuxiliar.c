@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include <string.h>
 
 typedef struct no
 {
@@ -7,7 +8,7 @@ typedef struct no
     char nome[30];
     struct no *next;
 }no;
-    struct no *corrente, *inicio, *auxiliar;
+    struct no *corrente, *inicio, *auxiliar, *auxiliar2;
 
 void Exibir()
 {
@@ -32,12 +33,13 @@ void Enterdata()
     printf("Informe o codigo:");
     scanf("%d", &corrente->codigo);
     printf("\nInforme o nome:");
-    scanf("%s", corrente->nome);
+    scanf("%s", &corrente->nome);
 }
 
-void Inserir()
+/*void Inserir()
 {
-    if(inicio==NULL){
+    if(inicio==NULL)
+    {
         corrente=(no*)malloc(sizeof(no));
         inicio = corrente;
         auxiliar = corrente;
@@ -50,11 +52,64 @@ void Inserir()
         corrente->next=NULL;
         Enterdata();
     }
+}*/
+
+void Classificar()
+{
+    int achou;
+    corrente=(no*)malloc(sizeof(no));
+    Enterdata();
+    auxiliar=inicio;
+    achou = 0;
+    if(inicio == NULL)
+    {
+        inicio = corrente;
+        auxiliar = corrente;
+        corrente->next=NULL;
+        achou = 1;
+        printf("\nInstalando o primeiro no na lista");
+        system("pause");
+    }else{
+        if(strcmp(corrente->nome,auxiliar->nome)<0)
+        {
+            corrente->next=auxiliar;
+            inicio = corrente;
+            achou = 1;
+            printf("\nElemento precede o primeiro da lista");
+            system("pause");
+        }else{
+            auxiliar2=auxiliar->next;
+            while(auxiliar2 != NULL)
+            {
+                if(strcmp(corrente->nome,auxiliar->nome)>=0 && (strcmp(corrente->nome,auxiliar2->nome)<=0))
+                {
+                    auxiliar->next=corrente;
+                    corrente->next=auxiliar2;
+                    achou = 1;
+                    printf("\nElemento inserido no meio da lista");
+                    system("pause");
+                    break;
+                }else{
+                    auxiliar=auxiliar->next;
+                    auxiliar2=auxiliar2->next;
+                }
+            }
+        }
+    }
+    if(strcmp(corrente->nome,auxiliar->nome)>=0 && (achou == 0))
+    {
+        auxiliar->next=corrente;
+        corrente->next=NULL;
+        achou = 1;
+        printf("\n Elemento inserido com sucesso no final da Lista");
+        system("pause");
+    }
 }
+
 
 void Consulta()
 {
-    char xnome[20];
+    char xnome[30];
     int achou, k;
 
     if(inicio == NULL)
@@ -70,8 +125,8 @@ void Consulta()
         while(auxiliar != NULL)
         {
             k++;
-            if(strcmp(xnome,corrente->nome)==0){
-                printf("\nRegistro encontrado na posicao %d", k);
+            if(strcmp(xnome,auxiliar->nome)==0){
+                printf("\nRegistro encontrado na posicao %d\n", k);
                 system("pause");
                 achou = 1;
                 break;
@@ -79,7 +134,8 @@ void Consulta()
                 auxiliar=auxiliar->next;
             }
         }
-        if(achou == 0){
+        if(achou == 0)
+        {
             printf("\nRegistro nao consta na lista");
             system("pause");
         }
@@ -88,51 +144,92 @@ void Consulta()
 
 void Excluir()
 {
-    char xnome[20];
-    int achou = 0;
+    //corrente=auxiliar->next;
+    //corrente=inicio->next;
+    char xnome[30];
+    int achou, k;
 
-    if (inicio == NULL)
+    if(inicio == NULL)
     {
-        printf("\n Lista vazia...");
+        printf("\nLista vazia...");
         system("pause");
-    } else {
+    }else{
         auxiliar = inicio;
         achou = 0;
-        printf("Informe o nome a ser exlcuido");
+        printf("\nInforme o nome a ser excluido:");
         scanf("%s", &xnome);
-        if(strcmp(xnome,auxiliar -> nome)==0)
+
+        if(strcmp(xnome,auxiliar->nome)==0)
         {
-            inicio = inicio -> next;
-            free(auxiliar);
-            achou = 1;
-            printf("\n Removido com sucesso o registro <<inicio da lista>>");
-            system("pause");
-        } else {
-            corrente = auxiliar -> next;
-            while( corrente != NULL)
-            {
-                if(strcmp(xnome,auxiliar -> nome)==0)
+                inicio=inicio->next;
+                free(auxiliar);
+                achou = 1;
+                printf("\nRegistro excluido com sucesso <<Inicio da lista>>");
+                system("pause");
+            }else{
+                corrente=auxiliar->next;
+                while(corrente != NULL)
                 {
-                    auxiliar -> next = corrente -> next;
-                    free(corrente);
-                    printf("\n Removido com sucesso o registro da lista <<meio & fim>>");
-                    achou=1;
-                    system("pause");
-                    break;
-                } else {
-                    auxiliar = auxiliar -> next;
-                    corrente = corrente -> next;
+                    if(strcmp(xnome,corrente->nome)==0)
+                    {
+                        auxiliar->next=corrente->next;
+                        free(corrente);
+                        printf("\nRegistro excluido com sucesso <<meio & fim>>");
+                        achou = 1;
+                        system("pause");
+                        break;
+                    }else{
+                        auxiliar=auxiliar->next;
+                        corrente=corrente->next;
+                    }
                 }
             }
         }
-    }
-    if(achou == 0)
-    {
-        printf("\n Registro não encontrado na Lista");
-        system("pause");
+        if(achou==0)
+        {
+            printf("\nRegistro nao encontrado na lista");
+            system("pause");
     }
 }
 
+void Alterar()
+{
+    char xnome[30];
+    int achou, k;
+
+    if(inicio == NULL)
+    {
+        printf("\n Lista vazia...");
+        system("pause");
+    }else{
+        printf("\nInforme o nome a ser alterado:");
+        scanf("%s", &xnome);
+        achou = 0;
+        k = 0;
+        auxiliar = inicio;
+        while(auxiliar != NULL)
+        {
+            k++;
+            if(strcmp(xnome,auxiliar->nome)==0)
+            {
+                printf("\nRegistro encontrado na posicao %d\n", k);
+                printf("\nInforme o novo nome:");
+                scanf("%s", auxiliar->nome);
+                printf("\nRegistro atualizado com sucesso");
+                system("pause");
+                achou = 1;
+                break;
+            }else{
+                auxiliar=auxiliar->next;
+            }
+        }
+        if(achou == 0)
+        {
+            printf("\nRegistro nao consta na lista");
+            system("pause");
+        }
+    }
+}
 
 int main()
 {
@@ -152,7 +249,7 @@ int main()
     switch(op)
     {
     case 1:
-    Inserir();
+    Classificar();
     break;
 
     case 2:
@@ -168,7 +265,7 @@ int main()
     break;
 
     case 5:
-    printf("\nFuncao a ser desenvolvida");
+    Alterar();
     break;
 
     default :
